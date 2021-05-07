@@ -1,0 +1,48 @@
+# List images
+docker images
+
+# build image with tag
+docker build -t hello-docker:1.0.0 .
+
+# image history
+docker image history 6b441 
+
+# Run our container disconnected, till i reboot the pc
+docker run -d
+
+# Run the images, old and new at the same time
+docker run -d --name first-container -p 8080:80 hello-docker:1.0.0
+docker run -d --name second-container -p 8081:80 hello-docker:1.0.1
+
+# Remove old image
+docker stop 258
+docker rm 258
+
+# old image is gone 
+docker ps -a
+
+
+# show all the running containers & turned off containers
+docker ps -a
+
+# Stop the container, server down
+docker stop 413c
+
+# Start the container
+docker start 413c
+
+# Run rabbitmq in few minutes
+docker run -d --hostname my-rabbit --name some-rabbit -p 8080:15672 rabbitmq:3-management
+
+# stop the rabbitmq container
+docker stop 4c4
+docker ps -a
+
+# Get latest mysql
+docker pull mysql
+docker run --name mysql-latest1 -e MYSQL_ROOT_PASSWORD=mysecret-pw5 -d mysql:latest
+
+docker ps -a
+docker stop 04a
+docker rm 04a
+docker rmi e64

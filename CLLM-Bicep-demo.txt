@@ -1,0 +1,55 @@
+1... Create empty Bicep
+
+2... Create simple storage account
+// storage.bicep
+
+resource stg 'Microsoft.Storage/storageAccounts@2019-06-01' = {
+  name: 'cllm2021stg' // must be globally unique, confirm to storage naming conventions
+  location: 'eastus2'
+  kind: 'StorageV2' // Storage
+  sku: {
+    tier: 'Standard'
+    name: 'Standard_GRS'
+  }
+}
+
+3... Parametrize storage
+
+// storage-with-params.bicep
+param location string = resourceGroup().location
+
+@allowed([
+  'demo'
+  'testing'
+  'staging'
+])
+param namePrefix string = 'demo'
+param storageName string = 'democllm2021v2'
+
+resource bicepStorage 'Microsoft.Storage/storageAccounts@2019-06-01' = {
+  name: storageName // computed storage name [parameters('name')]
+  location: location
+  kind: 'StorageV2'
+  sku: {
+    name: 'Standard_LRS'
+    tier: 'Standard'
+  }
+}
+
+output storageId string = bicepStorage.id 
+output computedStgName string = bicepStorage.name
+output blobEndpoint string = bicepStorage.properties.primaryEndpoints.blob
+
+4... Deploy the parametrized storage
+
+az group create -n bicep-starter-demo -l eastus2
+az group list -o table
+
+az deployment group create --name add-storage-w-parameters --resource-group bicep-starter-demo --template-file .\sandbox\storage-with-param.bicep --parameters storageName=cllm21newstg5 -c
+
+5. Look into Policy deployment template
+samples/custom-locations.bicep
+
+6. Demo multi-deployment with CI/CD
+main.bicep
+
